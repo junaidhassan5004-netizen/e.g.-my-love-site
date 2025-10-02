@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For you moon</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@700&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+/* ... [keep all your previous styles unchanged] ... */
+*{box-sizing:border-box;}
+body,html{margin:0;height:100%;font-family:'Poppins',sans-serif;color:white;overflow-x:hidden;position:relative;}
+.page{display:none;animation:fadeIn 0.5s ease forwards;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+h1{font-family:'Dancing Script',cursive;}
+.subtitle{color:#ffd6e0;}
+.btn{background:linear-gradient(135deg,#ff5c7c,#e14b6b);border:0;padding:.7rem 1.2rem;border-radius:999px;color:white;font-weight:700;cursor:pointer;margin:.5rem;transition:.2s;}
+.btn:hover{filter:brightness(1.1);}
+#passwordInput{padding:.7rem 1rem;border-radius:12px;border:2px solid #ffd6e0;font-size:1.2rem;outline:none;text-align:center;font-family:'Dancing Script',cursive;}
+#passwordInput:focus{border-color:#ff5c7c;box-shadow:0 0 15px #ff5c7c;}
+.hint{margin-top:0.5rem;display:none;font-weight:bold;text-shadow:0 0 10px #fff;}
+#letterBox{cursor:pointer;margin-top:2rem;padding:1rem;border:2px solid #ff5c7c;border-radius:12px;position:relative;overflow:hidden;text-align:center;font-size:5rem;animation:bounce 2s infinite;}
+#letterContent{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);opacity:0;transition:transform 0.6s ease,opacity 0.6s ease;background:rgba(59,11,88,0.9);padding:1rem 1.5rem;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,0.35);text-align:center;color:white;z-index:2;}
+.showLetter #letterContent{transform:translate(-50%,-50%) scale(1);opacity:1;}
+#finalPic{display:none;width:100%;height:100vh;object-fit:cover;}
+.fadeInUp { animation: fadeInUp 0.6s ease forwards; }
+@keyframes fadeInUp { from {opacity:0; transform: translateY(30px);} to {opacity:1; transform:translateY(0);} }
+.slideLeft { animation: slideLeft 0.6s ease forwards; }
+@keyframes slideLeft { from {opacity:0; transform: translateX(-100px);} to {opacity:1; transform:translateX(0);} }
+.slideRight { animation: slideRight 0.6s ease forwards; }
+@keyframes slideRight { from {opacity:0; transform: translateX(100px);} to {opacity:1; transform:translateX(0);} }
+.zoomIn { animation: zoomIn 0.6s ease forwards; }
+@keyframes zoomIn { from {opacity:0; transform: scale(0.5);} to {opacity:1; transform:scale(1);} }
+.rotateIn { animation: rotateIn 0.6s ease forwards; }
+@keyframes rotateIn { from {opacity:0; transform: rotate(-180deg) scale(0.5);} to {opacity:1; transform:rotate(0deg) scale(1);} }
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-30px);}}
+.pageContent{position:relative;z-index:1;text-align:center;padding:2rem;}
+.pageBlack{background:black;width:100%;height:100vh;overflow:hidden;position:relative;}
+iframe{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+/* Welcome Page Video */
+#welcomePage video {position:absolute;left:0;top:0;width:100vw;height:100vh;object-fit:cover;z-index:0;pointer-events:none;}
+#welcomePage .welcomeContent {position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}
+.gradientGlowWelcome {background: linear-gradient(90deg, #ff4b1f, #ff9068, #8e2de2, #4a00e0, #00c6ff, #0072ff);-webkit-background-clip: text;-webkit-text-fill-color: transparent;animation: glowWelcome 2s infinite alternate;}
+@keyframes glowWelcome {from { text-shadow: 0 0 8px #ff4b1f, 0 0 12px #8e2de2; }to   { text-shadow: 0 0 12px #00c6ff, 0 0 18px #ff9068; }}
+.gradientGlowPassword {font-family:'Dancing Script',cursive;font-size:2.4rem;background: linear-gradient(135deg,#ff9a9e,#fad0c4,#fbc2eb,#a1c4fd,#c2e9fb,#84fab0,#8fd3f4);-webkit-background-clip: text;-webkit-text-fill-color: transparent;animation: glowPassword 2s infinite alternate, floatPass 4s ease-in-out infinite;letter-spacing:1px;}
+@keyframes glowPassword {from { text-shadow: 0 0 10px #ff9a9e, 0 0 18px #a1c4fd; }to   { text-shadow: 0 0 14px #fbc2eb, 0 0 22px #84fab0; }}
+@keyframes floatPass {0%,100% { transform:translateY(0); }50% { transform:translateY(-8px); }}
+.questionText {font-size: 1.3rem;background: linear-gradient(135deg,#ff9a9e,#fad0c4,#fbc2eb,#a1c4fd,#c2e9fb,#84fab0,#8fd3f4);-webkit-background-clip: text;-webkit-text-fill-color: transparent;text-shadow: 0 0 10px rgba(255,200,255,0.6), 0 0 18px rgba(150,200,255,0.6);}
+.questionImg {width: 90%;max-width: 700px;border-radius: 16px;margin-bottom: 1rem;box-shadow: 0 10px 25px rgba(0,0,0,0.4);}
+.stars {position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;z-index:0;}
+.star {position:absolute;width:2px;height:2px;background:white;border-radius:50%;opacity:0.8;animation: twinkle 2s infinite alternate, floatStar 6s linear infinite;}
+@keyframes twinkle {from { opacity:0.3; }to   { opacity:1; }}
+@keyframes floatStar {from { transform:translateY(0); }to   { transform:translateY(-20px); }}
+</style>
+</head>
+<body>
+
+<!-- Welcome Page -->
+<div class="page active" id="welcomePage" style="position:relative; overflow:hidden;">
+  <video autoplay loop muted playsinline>
+    <source src="https://raw.githubusercontent.com/junaidhassan5000-hue/e.g.-my-love-site-./6b914768cd8ec68c9449d6f48ba4d3c1fc5d8bed/received_1649893608897074.mp4" type="video/mp4">
+  </video>
+  <div class="welcomeContent">
+    <h1 id="welcomeText" class="gradientGlowWelcome" style="font-size:3rem;"></h1>
+    <button class="btn" onclick="nextWelcome()">Continue</button>
+  </div>
+</div>
+
+<!-- Password Page -->
+<div class="page" id="passwordPage"
+     style="position:relative; background:url('https://raw.githubusercontent.com/junaidhassan5000-hue/e.g.-my-love-site-./c8204792ef22d6209f3223fcf296f3acc637c8b0/received_1104951427598871.jpeg') no-repeat center center/cover; height:100vh;">
+  <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:0;"></div>
+  <div class="pageContent" style="position:relative; z-index:1; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+    <h1 class="gradientGlowPassword">Dekhte hole je password dite hobe jaanu</h1>
+    <input type="password" id="passwordInput" placeholder="Enter password">
+    <button class="btn" onclick="checkPassword()">Enter</button>
+    <p id="hint1" class="hint" style="color:#ffb347;">Hint 1: Amader rltn koto sale shuru hoiche?</p>
+    <p id="hint2" class="hint" style="color:#87ceeb;">Hint 2: Saler sathe tarikh tau add korte hobe!</p>
+    <p id="hint3" class="hint" style="color:#ff6ec4;">Hint 3: Jantam parbi na 😏 → Pass holo 202327</p>
+  </div>
+</div>
+
+<!-- 30 Question Pages with Pics -->
+<div class="page fadeInUp pageBlack" id="q1">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://github.com/junaidhassan5000-hue/e.g.-my-love-site-./raw/76bbe36ab6b1bb55683065b73685679cd4a69990/IMG20230323164822.jpg" class="questionImg">
+    <h2 class="questionText">Dintar kotha mone ache? Amader prothom dekha mymensingh e 🌸</h2>
+    <button class="btn" onclick="showPic('q2')">Next</button>
+  </div>
+</div>
+
+<div class="page slideLeft pageBlack" id="q2">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5000-hue/e.g.-my-love-site-./3404b4441ae44b4e3219aab6466b5c324360634d/1684485100175.jpg" class="questionImg">
+    <h2 class="questionText">Punjabi & Sari</h2>
+    <button class="btn" onclick="showPic('q3')">Next</button>
+  </div>
+</div>
+
+<div class="page slideRight pageBlack" id="q3">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5000-hue/e.g.-my-love-site-./7d8e82e036a20da8ee1e6a76d9bcdb43e30569a2/1674834167126.jpg" class="questionImg">
+    <h2 class="questionText">Tmi ami ar amader bacca😁</h2>
+    <button class="btn" onclick="showPic('q4')">Next</button>
+  </div>
+</div>
+
+<div class="page zoomIn pageBlack" id="q4">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5000-hue/e.g.-my-love-site-./b590f5ac0a17f0c28d381d6b3f3fc61bc6d7f382/received_1621296558496545.jpeg" class="questionImg">
+    <h2 class="questionText">Sarajibon evabe buke aglay rakhte cai i mean "tmy hrid majhare rakhbo jete dibo na"</h2>
+    <button class="btn" onclick="showPic('q5')">Next</button>
+  </div>
+</div>
+
+<div class="page rotateIn pageBlack" id="q5">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5000-hue/e.g.-my-love-site-./f926caa774939b5266257989630c947d0555b8cc/received_909886804658384.jpeg" class="questionImg">
+    <h2 class="questionText">Pic ta kintu sundor👀</h2>
+    <button class="btn" onclick="showPic('q6')">Next</button>
+  </div>
+</div>
+
+<!-- 25 More Pic Pages --->
+<div class="page fadeInUp pageBlack" id="q6">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5000-hue/e.g.-my-love-site-./65d2dc262959738e0a980429ca12c2469d7576b7/received_469353812883719.jpeg" class="questionImg">
+    <h2 class="questionText">এক কাপ চায়ে তোমাকে চাই</h2>
+    <button class="btn" onclick="showPic('q7')">Next</button>
+  </div>
+</div>
+<div class="page slideLeft pageBlack" id="q7">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./b960f894dbb029fc35d9978619db9d2e8edb293d/IMG20231204162708.jpg" class="questionImg">
+    <h2 class="questionText">এই গা ছুয়ে বলো.......ছেড়ে যাবে না কখনো </h2>
+    <button class="btn" onclick="showPic('q8')">Next</button>
+  </div>
+</div>
+<div class="page slideRight pageBlack" id="q8">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://github.com/junaidhassan5004-netizen/e.g.-my-love-site-./raw/0a8a99754106b13b4451831ee1559148b8df2129/received_1725081385001123.jpeg" class="questionImg">
+    <h2 class="questionText">Charo galta lal hye gelo to😾</h2>
+    <button class="btn" onclick="showPic('q9')">Next</button>
+  </div>
+</div>
+<div class="page zoomIn pageBlack" id="q9">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./d0d06f18c39baa083a94e9e24bc07d97d57953b2/IMG-20250124-WA0008.jpg" class="questionImg">
+    <h2 class="questionText">তুমি হাতটা শুধু ধরো...আমি হবো না আর কারো❤️</h2>
+    <button class="btn" onclick="showPic('q10')">Next</button>
+  </div>
+</div>
+<div class="page rotateIn pageBlack" id="q10">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./cb3aebb0683a5a792969034c67e6eaed64aa45f6/IMG_20250906_144431.jpg" class="questionImg">
+    <h2 class="questionText">Heart line🫀</h2>
+    <button class="btn" onclick="showPic('q11')">Next</button>
+  </div>
+</div>
+<div class="page fadeInUp pageBlack" id="q11">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./b64552077bda8f2c96c10bcf9d9a741d447e16b5/received_1244266013352234.jpeg" class="questionImg">
+    <h2 class="questionText">Aleya Garden </h2>
+    <button class="btn" onclick="showPic('q12')">Next</button>
+  </div>
+</div>
+<div class="page slideLeft pageBlack" id="q12">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./3584fef78d40004c2238fd5d8941d2f52f0abedf/received_1106709097430605.jpeg" class="questionImg">
+    <h2 class="questionText">Arektu kache ashona😒</h2>
+    <button class="btn" onclick="showPic('q13')">Next</button>
+  </div>
+</div>
+<div class="page slideRight pageBlack" id="q13">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./b2ce1e3b9117f692e4ff8cd9b9016b71a9281536/received_1112599646686717.jpeg" class="questionImg">
+    <h2 class="questionText">Mone pore eksathe katano sundor din gula?</h2>
+    <button class="btn" onclick="showPic('q14')">Next</button>
+  </div>
+</div>
+<div class="page zoomIn pageBlack" id="q14">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./19c2e5736080b0a39577cdd57e449a98699459ba/IMG-20250523-WA0002.jpg" class="questionImg">
+    <h2 class="questionText">Egula kokhno vulte parba?</h2>
+    <button class="btn" onclick="showPic('q15')">Next</button>
+  </div>
+</div>
+<div class="page rotateIn pageBlack" id="q15">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./f25e5b81ece9f18338743dbeabe343bbba59c47f/IMG20240330195809.jpg" class="questionImg">
+    <h2 class="questionText">tmk dite jaitechilam</h2>
+    <button class="btn" onclick="showPic('q16')">Next</button>
+  </div>
+</div>
+<div class="page fadeInUp pageBlack" id="q16">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://github.com/junaidhassan5004-netizen/e.g.-my-love-site-./raw/f25e5b81ece9f18338743dbeabe343bbba59c47f/1716132911991.jpg" class="questionImg">
+    <h2 class="questionText">Mone pore?</h2>
+    <button class="btn" onclick="showPic('q17')">Next</button>
+  </div>
+</div>
+<div class="page slideLeft pageBlack" id="q17">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./dc701c56445bc40e42089384eff3d62b62b3f981/IMG20231112170558.jpg" class="questionImg">
+    <h2 class="questionText">Ek pagol sundorir gale kiss ditache😌</h2>
+    <button class="btn" onclick="showPic('q18')">Next</button>
+  </div>
+</div>
+<div class="page slideRight pageBlack" id="q18">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./9f2581ccf366ff0254b0cf715bcc3bead981b65f/IMG20231112122607.jpg" class="questionImg">
+    <h2 class="questionText">Koto santi nia boisa achi</h2>
+    <button class="btn" onclick="showPic('q19')">Next</button>
+  </div>
+</div>
+<div class="page zoomIn pageBlack" id="q19">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./8304cf914f054d9e5589e13618f88564feb3d4f4/IMG20230623151910.jpg" class="questionImg">
+    <h2 class="questionText">Amr moto kore jibone keu valobaste parbo na tmk </h2>
+    <button class="btn" onclick="showPic('q20')">Next</button>
+  </div>
+</div>
+<div class="page rotateIn pageBlack" id="q20">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./088079c9730962e920320ad09d0aa9cfa9af65d0/IMG20230623163919.jpg" class="questionImg">
+    <h2 class="questionText">Eitake wallpaper deua jai na?</h2>
+    <button class="btn" onclick="showPic('q21')">Next</button>
+  </div>
+</div>
+<div class="page fadeInUp pageBlack" id="q21">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./b629bc2ce97e1208d8f4d6dc2b41b9e6ae3e4ff9/IMG20230518123057.jpg" class="questionImg">
+    <h2 class="questionText">First date🖤</h2>
+    <button class="btn" onclick="showPic('q22')">Next</button>
+  </div>
+</div>
+<div class="page slideLeft pageBlack" id="q22">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://github.com/junaidhassan5004-netizen/e.g.-my-love-site-./raw/90f172158d7a39e7a8d8b669f1bad1f283d4ad09/IMG20230518143326.jpg" class="questionImg">
+    <h2 class="questionText">love language 🫀</h2>
+    <button class="btn" onclick="showPic('q23')">Next</button>
+  </div>
+</div>
+<div class="page slideRight pageBlack" id="q23">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./f9838165a11d129b6d73e9fd73089e3e4bdc95d4/IMG20230518163728.jpg" class="questionImg">
+    <h2 class="questionText">din gulo miss kori!</h2>
+    <button class="btn" onclick="showPic('q24')">Next</button>
+  </div>
+</div>
+<div class="page zoomIn pageBlack" id="q24">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://github.com/junaidhassan5004-netizen/e.g.-my-love-site-./raw/d2e630bbb2c4194e9e7018160c61b31c2d9e5359/IMG20231113205949.jpg" class="questionImg">
+    <h2 class="questionText">Tmr deua special ekta gift</h2>
+    <button class="btn" onclick="showPic('q25')">Next</button>
+  </div>
+</div>
+<div class="page rotateIn pageBlack" id="q25">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./02a7fb8cdd3b2bf06423470275410e1bbf49f7e0/IMG20231112160240.jpg"class="questionImg">
+    <h2 class="questionText">Ek Rickshaw te uthe ghurar din gulo miss koro na?</h2>
+    <button class="btn" onclick="showPic('q26')">Next</button>
+  </div>
+</div>
+<div class="page fadeInUp pageBlack" id="q26">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://github.com/junaidhassan5004-netizen/e.g.-my-love-site-./raw/2c3e8f02833650a40271e9e4b1a09a25aec56853/received_915701586154618.jpeg" class="questionImg">
+    <h2 class="questionText">Mone ache?</h2>
+    <button class="btn" onclick="showPic('q27')">Next</button>
+  </div>
+</div>
+<div class="page slideLeft pageBlack" id="q27">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site/c32c41703fab273181053d531fc82aa083057f41/IMG-20250930-WA0013.jpg"b class="questionImg">
+    <h2 class="questionText">Evabe sarajibon hat ta dhore rekho!</h2>
+    <button class="btn" onclick="showPic('q28')">Next</button>
+  </div>
+</div>
+<div class="page slideRight pageBlack" id="q28">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://github.com/junaidhassan5004-netizen/e.g.-my-love-site-./raw/857476986af71d6bcafc005e0ba8204b2f133423/received_726547055917792.jpeg" class="questionImg">
+    <h2 class="questionText">Tmk deua cithi ta</h2>
+    <button class="btn" onclick="showPic('q29')">Next</button>
+  </div>
+</div>
+<div class="page zoomIn pageBlack" id="q29">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site-./d6e8e19f149c331ef85a19fdeddb6f2f8b5bd74c/IMG20230701172049.jpg" class="questionImg">
+    <h2 class="questionText">Mehedi diye dichilam</h2>
+    <button class="btn" onclick="showPic('q30')">Next</button>
+  </div>
+</div>
+<div class="page rotateIn pageBlack" id="q30">
+  <div class="stars"></div>
+  <div class="pageContent">
+    <img src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site/264b61e3caa4286d88c80fe06eb00fb24b95c9f6/IMG-20250930-WA0010.jpg" class="questionImg">
+    <h2 class="questionText">Ulta holeu bepar ta cute!</h2>
+    <button class="btn" onclick="showPic('final')">Next</button>
+  </div>
+</div>
+
+<!-- Final -->
+<div class="page pageBlack" id="final" style="text-align:center;position:relative;">
+  <div class="stars"></div>
+  <div id="letterBox">💌
+    <div id="letterContent">This is my letter to you ❤️</div>
+  </div>
+  <img id="finalPic" src="https://raw.githubusercontent.com/junaidhassan5004-netizen/e.g.-my-love-site/4677d1b0371399fc3ac6578def845db54e01a241/HD-wallpaper-love-i-love-you-love-you-my-life-you-miss-black.jpg">
+</div>
+
+<script>
+// Welcome text typing
+const welcomeText="Welcome my life";
+let idx=0;
+function typeText(){
+  if(idx<welcomeText.length){
+    document.getElementById('welcomeText').innerHTML+=welcomeText[idx];
+    idx++;
+    setTimeout(typeText,200);
+  }
+}
+typeText();
+
+function nextWelcome(){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('passwordPage').classList.add('active');
+}
+
+// Password logic
+const PASSWORD="202327";
+let wrongAttempts=0;
+function checkPassword(){
+  const input=document.getElementById('passwordInput');
+  if(input.value===PASSWORD){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('q1').classList.add('active');
+    wrongAttempts=0;
+    createStars("q1");
+  } else {
+    wrongAttempts++;
+    if(wrongAttempts===1){
+      document.getElementById('hint1').style.display="block";
+    } else if(wrongAttempts===2){
+      document.getElementById('hint2').style.display="block";
+    } else if(wrongAttempts>=3){
+      document.getElementById('hint3').style.display="block";
+    }
+    input.value="";
+  }
+}
+
+// Show Next Page
+function showPic(nextId){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(nextId).classList.add('active');
+  createStars(nextId);
+}
+
+// Letter animation
+const letterBox=document.getElementById('letterBox');
+letterBox.addEventListener('click',()=>{
+  letterBox.classList.add('showLetter');
+  document.getElementById('finalPic').style.display="block";
+});
+
+// Generate stars
+function createStars(pageId){
+  const container=document.querySelector(`#${pageId} .stars`);
+  if(!container || container.children.length>0) return;
+  for(let i=0;i<60;i++){
+    const star=document.createElement("div");
+    star.className="star";
+    star.style.top=Math.random()*100+"%";
+    star.style.left=Math.random()*100+"%";
+    star.style.animationDuration=(1+Math.random()*3)+"s";
+    container.appendChild(star);
+  }
+}
+</script>
+
+</body>
+</html>
